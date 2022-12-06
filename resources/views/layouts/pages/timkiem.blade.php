@@ -5,7 +5,7 @@
         <span>></span>
         <a href="">Xe đi Sài Gòn từ Bình Thuận</a>
     </div>
-    <form action="{{ route('timve') }}" method="post">
+    <form action="{{ route('timve') }}" method="get">
         @csrf
     <ul class="search_ticket container">
         <li>
@@ -216,8 +216,7 @@
                                 <span class="price">{{$news->price}} Vnd</span>
                             </div>
                         </div>
-                        <form action="" class="index__right--child hidden" method="post">
-                            @csrf
+                        <div class="index__right--child hidden">
                             <ul class="index__right--child--status" data-index="0">
                                 <li class="active">
                                     <span>1</span>
@@ -261,23 +260,24 @@
                                         <ul>
                                             @foreach ($ticket as $tk)
                                             {{-- 0 là chưa đặt , 1 đã đặt --}}
+                                            @if ($tk->id_news == $news->id)
                                                 @if ($tk->location % 2 == 0)
-                                                    @if($tk->id_nhaxe == $news->id && $tk->status == 1)
-                                                    <li>
-
-                                                        <div class="index__right--child--item box">
-                                                            <input type="checkbox">
-                                                            <span class="close bx bx-x"></span>
-                                                        </div>
-                                                    </li>
+                                                    @if( $tk->status == 1)
+                                                        <li>
+                                                            <div class="index__right--child--item box ">
+                                                                <span></span>
+                                                            </div>
+                                                        </li>
                                                     @else
-                                                    <li>
-                                                        <div class="index__right--child--item box empty">
-                                                            <input type="checkbox">
-                                                        </div>
-                                                    </li>
-
+                                                        <li>
+                                                            <input style="display: none;" type="checkbox" name="location[]" id="location{{$tk->id}}" value="{{$tk->id}}">
+                                                            <div onclick="checkedd({{$tk->id}})" id="location1{{$tk->id}}" class="index__right--child--item box empty">
+                                                                <span></span>
+                                                                <span   class="close bx bx-x"></span>
+                                                            </div>
+                                                        </li>
                                                     @endif
+                                                @endif
                                                 @endif
                                             @endforeach
                                         </ul>
@@ -287,23 +287,24 @@
                                         <ul>
                                             @foreach ($ticket as $tk)
                                             {{-- 0 là chưa đặt , 1 đã đặt --}}
+                                            @if ($tk->id_news == $news->id)
                                                 @if ($tk->location % 2 != 0)
-                                                    @if($tk->id_nhaxe == $news->id && $tk->status == 1)
+                                                    @if( $tk->status == 1)
                                                         <li>
-                                                            <div class="index__right--child--item box empty">
-                                                                <input type="checkbox">
-
+                                                            <div class="index__right--child--item box ">
+                                                                <span></span>
                                                             </div>
                                                         </li>
                                                     @else
                                                         <li>
-                                                            <div class="index__right--child--item box">
-                                                                <input type="checkbox">
-
+                                                            <input style="display: none;" type="checkbox" name="location[]" id="location{{$tk->id}}" value="{{$tk->id}}">
+                                                            <div onclick="checkedd({{$tk->id}})" id="location1{{$tk->id}}" class="index__right--child--item box empty">
+                                                                <span></span>
                                                                 <span class="close bx bx-x"></span>
                                                             </div>
                                                         </li>
                                                     @endif
+                                                @endif
                                                 @endif
                                             @endforeach
                                         </ul>
@@ -314,12 +315,21 @@
 
 
                             <!--Step 3 -->
-                            <div  class="step step3 hidden form-contact form__if js_form">
-                                <input type="hidden" name="id_ticket" id="id_ticket">
-                                <input type="hidden" name="id_new" id="id_new">
-                                <input type="hidden" name="location[]" id="location">
-                                <input type="hidden" name="id_ticket" id="id_ticket">
+                            <form action="{{ route('book', ['id_news'=>$news->id]) }}" method="post" enctype="multipart/form-data" class="step step3 hidden form-contact form__if js_form">
+                                @csrf
+                                <input type="hidden" name="location" id="location111{{$news->id}}">
+                                {{-- <input type="hidden" name="id_ticket" value="{{$news->id}}" id="id_ticket"> --}}
+                                <input type="hidden" name="id_user" value="{{Auth::user()->id}}" id="id_user">
+                                <input type="hidden" name="id_nhaxe" value="{{$news->id_user}}" id="id_nhaxe">
                                 <div class="form-field">
+                                    <div class="field">
+                                        <div class="field__label">
+                                            <label for="">Số lượng vé đã đặt</label>
+                                        </div>
+                                        <div class="field__input">
+                                            <input type="number" name="count" id="id_count{{$news->id}}" readonly>
+                                        </div>
+                                    </div>
                                     <div class="field">
                                         <div class="field__label">
                                             <label for="">Họ và tên</label>
@@ -342,7 +352,7 @@
                                             <label for="">Email để nhận thông tin vé</label>
                                         </div>
                                         <div class="field__input">
-                                            <input class="js_email" type="text" name="email"
+                                            <input class="js_email" type="text" name="email" value="{{Auth::user()->email}}"
                                                 placeholder="Nhập số điện email...">
                                         </div>
                                     </div>
@@ -365,7 +375,15 @@
                                     <span class="text-black">và</span>
                                     <span>Quy chế</span>
                                 </p>
-                            </div>
+                                <button style="
+                                margin-left: 200px;
+                                white-space: nowrap;
+                                background: #547CE3;
+                                color: #ffffff;
+                                padding: 0.8rem 1.6rem;
+                                margin-left: 200px;
+                                border-radius: 10px" type="submit">Đặt vé</button>
+                            </form>
                             <!--Step 3 -->
 
                             <ul class="footer" id="btn__k" style="margin-right: -1rem;">
@@ -373,10 +391,10 @@
                                     <button class="button_previous hidden">Quay lại</button>
                                 </li>
                                 <li></li>
-                                <li id="total"></li>
-                                <li><button class="button_next" id="button_next" onclick="button_next()">Tiếp tục</button></li>
+                                <li id="total{{$news->id}}"></li>
+                                <li id="noooo"><button class="button_next" id="button_next" onclick="button_next({{$news->id}})">Tiếp tục</button></li>
                             </ul>
-                        </form>
+                        </div>
                     </div>
                    @endforeach
                 </div>
@@ -388,9 +406,46 @@
     </div>
     <script>
 
-        function button_next(){
-            var btn = document.getElementById('button_next');
-            btn.setAttribute('type', 'submit');
+        function button_next(news){
+            var markedCheckbox = [].filter.call(document.getElementsByName('location[]'), function(c) {
+                                    return c.checked;
+                                }).map(function(c) {
+                                    return c.value;
+                                });
+            console.log(markedCheckbox);
+            let countt = markedCheckbox.length;
+            if(countt == 0){
+                alert("Bạn chưa chọn vé! Vui lòng chọn.")
+
+            }else{
+            let ne =  "location111"+news;
+            let id_countt =  "id_count"+news;
+            document.getElementById(ne).value = markedCheckbox;
+            document.getElementById(id_countt).value = countt;
+            console.log("dữ liệu là:---"+document.getElementById(id_countt).value+"---- "+document.getElementById(ne).value);
+            document.getElementById("noooo").style.display = "none";
+            }
+
+        }
+        function checkedd(k){
+            let loca = "location"+k;
+            let locaaaaa = "location1"+k;
+            var x = document.getElementById(loca).checked;
+            if(x == true){
+                let element = document.getElementById(locaaaaa);
+
+                document.getElementById(loca).checked = false;
+                element.classList.add("empty");
+                element.classList.remove("selected");
+            }
+            else{
+                let element = document.getElementById(locaaaaa);
+
+                document.getElementById(loca).checked = true;
+                element.classList.remove("empty");
+                element.classList.add("selected");
+            }
+
         }
     </script>
 

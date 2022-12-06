@@ -39,7 +39,14 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/listhome', [HomeController::class, 'list'])->name('listhome');
-Route::post('/timve', [HomeController::class, 'timve'])->name('timve');
+Route::get('/timve', [HomeController::class, 'timve'])->name('timve');
+Route::post('/book/{id_news}', [HomeController::class, 'book'])->name('book');
+Route::get('/listticket/{id}', [HomeController::class, 'listticket'])->name('listticket');
+Route::get('/deleteticket/{id}', [HomeController::class, 'deleteticket'])->name('deleteticket');
+Route::get('/listnew', [NhaXeController::class, 'listnew'])->name('listnew');
+Route::get('/statusticket/{id}', [NhaXeController::class, 'statusticket'])->name('statusticket');
+Route::get('/activeTicket/{id}', [NhaXeController::class, 'activeTicket'])->name('activeTicket');
+
 Route::get('/about', function () {
     return view('layouts.pages.about');
 })->name('about');

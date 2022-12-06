@@ -15,6 +15,7 @@
 
         </thead>
         <tbody>
+            @if (!empty($news))
 
             @foreach($news as $key => $news)
             <tr>
@@ -22,17 +23,22 @@
                 <td>{{$news->name}}</td>
                 <td>{{$news->timestart}}</td>
                 <td>{{$news->timeend}}</td>
-                <td><a href="{{route('edit',['id' => $news-> id])}}"> 
-                    <button class="btn btn-danger btn-sm">Edit</button>
-                    <span><a href="{{ route('delete', ['id' => $news->id]) }}">
+                <td>
+                    <a href="{{route('statusticket',['id' => $news->id])}}">
+                        <button class="btn btn-success btn-sm">Trạng thái vé</button>
+                    </a>
+                    <a href="{{route('edit',['id' => $news->id])}}">
+                        <button class="btn btn-primary btn-sm">Edit</button>
+                    </a>
+                    <a href="{{ route('delete', ['id' => $news->id]) }}">
                         <button class="btn btn-danger btn-sm">Xóa</button>
-                    </a></span>
-                </a></td>
+                    </a>
+                </td>
                 <td> </td>
-
-
             </tr>
             @endforeach
+            @endif
+
         </tbody>
     </table>
 </div>

@@ -19,13 +19,24 @@
         <li class="nav-item" style="margin-right: 20px;">
           <a class="nav-link" href="#" style="font-size: 20px;"> Trang Chủ</a></a>
         </li>
-        <li class="nav-item" style="margin-right: 20px;">
-          <a class="nav-link" href="{{route('listhome')}}" style="font-size: 20px;"> List</a></a>
-        </li>
-        <li class="nav-item" style="margin-right: 20px;">
-          <a class="nav-link" href="#" style="font-size: 20px;"> List</a></a>
-          
-        </li>
+        @auth
+            @if (Auth::user()->is_admin == 0)
+            <li class="nav-item" style="margin-right: 20px;">
+                <a class="nav-link" href="{{route('listhome')}}" style="font-size: 20px;"> Danh sách nhà xe</a></a>
+              </li>
+              <li class="nav-item" style="margin-right: 20px;">
+                <a class="nav-link" href="{{ route('listticket', ['id'=>Auth::user()->id]) }}" style="font-size: 20px;"> Danh sách vé đã đặt</a></a>
+              </li>
+              @else
+              <li class="nav-item" style="margin-right: 20px;">
+                <a class="nav-link" href="{{route('listnew')}}" style="font-size: 20px;"> Danh sách chuyến</a></a>
+              </li>
+              {{-- <li class="nav-item" style="margin-right: 20px;">
+                <a class="nav-link" href="#" style="font-size: 20px;"> List</a></a>
+              </li> --}}
+            @endif
+        @endauth
+
       </ul>
       <!-- Left links -->
     </div>

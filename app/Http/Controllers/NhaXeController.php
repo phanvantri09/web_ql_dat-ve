@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\news;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
+use App\Models\User;
 class NhaXeController extends Controller
 {
 
@@ -74,4 +75,21 @@ class NhaXeController extends Controller
         news::find($id)->delete();
         return redirect()->back()->with('status', 'Xóa Thành Công');
     }
+    public function listnew(){
+        $news = news::where('id_user', Auth::user()->id)->get();
+        return view('layouts.pages.nhaxe.list', compact('news'));
+    }
+    public function statusticket($id){
+        $ticket =Ticket::where('id_nhaxe',  Auth::user()->id)->where('id_news', $id)->get();
+        $news = news::where('id_user', Auth::user()->id)->get();
+        $user = User::all();
+        return view('layouts.pages.nhaxe.statusticket', compact(['ticket','news','user']));
+    }
+    public function activeTicket($id){
+        $ticket = Ticket::find($id);
+        $ticket->status = 2;
+        $ticket->save();
+        return back();
+    }
+
 }
